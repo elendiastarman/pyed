@@ -106,6 +106,10 @@ class PyedNode:
     raise NotImplementedError()
 
 
+class PyedValue(object):
+  pass
+
+
 class PyedNulladic(object):
   _input_specs = None
   ready = lambda self: True
