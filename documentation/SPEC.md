@@ -1,8 +1,6 @@
-# Pyed Specification
+# PyedASM Specification
 
-The primary building blocks of Pyed are `PyedNode`, which represents a set of instructions to execute, and `PyedValue`, which is used when passing values through Pyed nodes and programs.
-
-Pyed is meant to be a language that is truly usable in a graphical environment, which makes things awkward when Pyed programs need to be written down. Since this is early in development, we can get away with implementing a super simple text version that roughly corresponds to the ideal.
+The primary building blocks of Pyed are `PyedNode`, which represents a set of instructions to execute, and `PyedValue`, which is used when passing values through Pyed nodes and programs. Pyed is meant to be a language that is truly usable in a graphical environment, which makes things awkward when Pyed programs need to be written down. Since this is early in development, we can get away with implementing a super simple text version that roughly corresponds to the ideal. Think of this as a text interface for the language while it's being developed.
 
 ## Rough draft 0
 
