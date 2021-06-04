@@ -1,6 +1,7 @@
 from core.runner import Runner
+from core.director import Director
 from core.system import PyedSTDIN, PyedSTDOUT
-from core.operators import PyedEquals, PyedCutNode
+from core.operators import PyedEquals, PyedCutNode, PyedAddNode
 from core.primitives import PyedConst
 
 
@@ -24,6 +25,19 @@ def __aoc_day3():
 
   # runner = Runner(root=stdinput, nodes=[stdinput, stdoutput, newline, cut1, pick1, count1])
   runner = Runner(root=stdinput, nodes=[stdinput, stdoutput, newline, cut1])
+  runner.step()
+
+
+def __simple_math():
+  a = PyedConst(5)
+  b = PyedConst(7)
+
+  add = PyedAddNode(inputs=[['object', a], ['object', b]])
+
+  stdoutput = PyedSTDOUT(inputs=[add])
+
+  # runner = Runner(root=stdinput, nodes=[stdinput, stdoutput, newline, cut1, pick1, count1])
+  runner = Director(start_nodes=[stdoutput], all_nodes=[stdoutput, add, a, b])
   runner.step()
 
 

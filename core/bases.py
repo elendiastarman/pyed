@@ -1,4 +1,4 @@
-from .util import UNSET, set_from
+from .util import UNSET, EMPTY, set_from
 from uuid import uuid4
 
 
@@ -103,6 +103,44 @@ class PyedNode:
     return _
 
   def take(self):
+    raise NotImplementedError()
+
+  ...
+
+  @classmethod
+  def define(cls, input_specs, output_specs):
+    """Given a set of inputs and outputs, do things accordingly."""
+    ...
+
+  def emit(self, field, value):
+    """Puts 'value' in the exposed slot for 'field'."""
+    ...
+
+  def initialize(self):
+    """Does anything that is needed once at the start and then never again, or reused throughout."""
+    ...
+
+  def reset(self):
+    """Reverts to a blank slate as if no operations were run."""
+    self._base_reset()
+
+  def _base_reset(self):
+    self.errors = []
+
+  def prepare(self, *):
+    """Any setup work needed for an operation."""
+    ...
+
+  def perform(self, *):
+    """Does the actual operation(s)."""
+    ...
+
+  def finish(self):
+    """Closes out anything necessary."""
+    ...
+    self.emit('value', EMPTY)
+
+  def resume(self):
     raise NotImplementedError()
 
 
