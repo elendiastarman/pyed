@@ -20,12 +20,13 @@ class PyedConst(PyedNulladic, PyedNode):
     return self.output
 
 
-class PyedContainerNode(PyedNode):
+class PyedGroupNode(PyedNode):
   def __init__(self, inner_nodes: List[PyedNode], *args, **kwargs):
     self.inner_nodes = inner_nodes
+    self.inner_root = inner_nodes[0]
     self.output = UNSET
     super().__init__(*args, **kwargs)
 
 
-class PyedResumable(PyedContainerNode):
+class PyedResumable(PyedGroupNode):
   pass

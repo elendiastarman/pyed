@@ -1,0 +1,26 @@
+:input ^TEXT
+:output ^TEXT
+  :concat => .source
+
+:split_lines $SPLIT
+  :input => .source
+  '\n' => .condition
+
+:cast_to_ints $CAST
+  :split_lines => .source
+  <int> => .type
+
+:splitter $SEGMENT
+  :cast_to_ints => .source
+  2 => .num_pieces
+
+:min $TAKE
+  :splitter.cant => .source
+  \min => .cond
+
+:concat $COLLECT
+  :min => .source
+
+:sort #GROUP[:splitter :min :concat]
+  :splitter.can => :splitter.source
+  :concat => :min
