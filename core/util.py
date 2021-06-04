@@ -1,7 +1,14 @@
-class UNSET:
+class Constant:
+  def __init__(self, name):
+    self.name = name
+
   def __str__(self):
-    return '<UNSET>'
+    return f'<{self.name}>'
   __repr__ = __str__
+
+
+UNSET = Constant('UNSET')
+EMPTY = Constant('EMPTY')
 
 
 def set_from(*args):
