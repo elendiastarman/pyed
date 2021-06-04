@@ -127,11 +127,11 @@ class PyedNode:
   def _base_reset(self):
     self.errors = []
 
-  def prepare(self, *):
+  def prepare(self):
     """Any setup work needed for an operation."""
     ...
 
-  def perform(self, *):
+  def perform(self):
     """Does the actual operation(s)."""
     ...
 

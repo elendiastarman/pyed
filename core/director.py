@@ -9,6 +9,10 @@ class Director:
     self.all_nodes = all_nodes
     self.node_graph = self.make_node_graph(start_nodes, all_nodes)
 
+    # import pprint
+    # pprint.pprint(self.start_nodes)
+    # pprint.pprint(self.node_graph)
+
   def make_node_graph(self, start_nodes, all_nodes):
     node_graph: dict = {}
 
@@ -29,31 +33,32 @@ class Director:
     self.resolve_graph_references(node_graph)
 
     for index, start_node in enumerate(self.start_nodes):
-      signature, _ = self.parse_desc(start_node, signature_only=True)
+      signature = self.parse_desc(start_node, {}, signature_only=True)
       self.start_nodes[index] = node_graph[signature]
 
     return node_graph
 
-  def parse_desc(node_desc, scratchpad: dict, *, signature_only=False):
+  def parse_desc(self, node_desc, scratchpad: dict, *, signature_only=False):
     # scratchpad will be reused by self.make_node
     signature = uuid4()
     refs = []
 
-    # in this first iteration, node_desc is a list where the first element is a type hint
+    # in this first iteration, node_desc is a list where the first element is an input spec name
     # and the second element is a Python instance of a class like PyedConst
-    # so we'll just.....borrow a bit from Python
+    # and those classes inherit from PyedNode which sets self.id on every instance
 
-    signature = id(node_desc)
+    signature = node_desc.id
+    if signature_only:
+      return signature
 
-    if not signature_only:
-      for ref in [*node_desc.inputs]:
-        refs.append(id(ref[1]))
+    for ref, node in [*node_desc.ready_inputs.items(), *node_desc.waiting_inputs.items()]:
+      refs.append(node.id)
 
     #
 
     return signature, refs
 
-  def make_node(node_desc, scratchpad, signature=None):
+  def make_node(self, node_desc, scratchpad, signature=None):
     # scratchpad was used by self.parse_desc
 
     # in this first iteration, node_desc is a Python instance of a class like PyedConst
@@ -69,4 +74,7 @@ class Director:
 
       for ref_signature, ref_data in refs.items():
         if ref_data is None:
-          refs[ref_signature] = node_graph[ref_signature]
+          try:
+            refs[ref_signature] = node_graph[ref_signature]
+          except KeyError:
+            import ipdb; ipdb.set_trace()

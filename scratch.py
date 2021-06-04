@@ -32,14 +32,14 @@ def __simple_math():
   a = PyedConst(5)
   b = PyedConst(7)
 
-  add = PyedAddNode(inputs=[['object', a], ['object', b]])
+  add = PyedAddNode(inputs=[['left_object', a], ['right_object', b]])
 
   stdoutput = PyedSTDOUT(inputs=[add])
 
   # runner = Runner(root=stdinput, nodes=[stdinput, stdoutput, newline, cut1, pick1, count1])
-  runner = Director(start_nodes=[stdoutput], all_nodes=[stdoutput, add, a, b])
-  runner.step()
+  director = Director(start_nodes=[stdoutput], all_nodes=[stdoutput, add, a, b])
+  director.step()
 
 
 if __name__ == '__main__':
-  __aoc_day3()
+  __simple_math()

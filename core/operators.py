@@ -21,6 +21,22 @@ class PyedEquals(PyedComp):
 # # #
 
 
+class PyedAddNode(PyedNode):
+  _input_specs = dict(
+    left_object=lambda _: True,
+    right_object=lambda _: True,
+  )
+
+  _input_defaults = dict(
+  )
+
+  def perform(self, scratchpad, result):
+    pass
+
+
+# # #
+
+
 class PyedCutNode(PyedNode):
   _input_specs = dict(
     object=lambda _: True,
