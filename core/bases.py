@@ -20,6 +20,8 @@ class PyedNode:
     if self.inputs:
       self.assign_inputs()
 
+    self.result = {}
+
   def assign_inputs(self):
     unassigned = []
     for _input in self.inputs:
@@ -59,51 +61,51 @@ class PyedNode:
         default = self._input_defaults[_key]
         self.waiting_inputs[_key] = default() if callable(default) else default
 
-  def unready(self):
-    self.waiting_inputs = {**self.ready_inputs, **self.waiting_inputs}
-    self.ready_inputs = dict()
+  # def unready(self):
+  #   self.waiting_inputs = {**self.ready_inputs, **self.waiting_inputs}
+  #   self.ready_inputs = dict()
 
-  def ready(self):
-    still_waiting = dict()
+  # def ready(self):
+  #   still_waiting = dict()
 
-    for _key, _input in [*self.waiting_inputs.items()]:
-      target = self.ready_inputs if _input.ready() else still_waiting
-      target[_key] = self.waiting_inputs.pop(_key)
+  #   for _key, _input in [*self.waiting_inputs.items()]:
+  #     target = self.ready_inputs if _input.ready() else still_waiting
+  #     target[_key] = self.waiting_inputs.pop(_key)
 
-    self.waiting_inputs = still_waiting
-    return len(self.waiting_inputs) == 0
+  #   self.waiting_inputs = still_waiting
+  #   return len(self.waiting_inputs) == 0
 
-  def prepare(self):
-    self.ready_values = dict()
-    for _key, _input in self.ready_inputs.items():
-      if _input is UNSET:
-        continue
+  # def prepare(self):
+  #   self.ready_values = dict()
+  #   for _key, _input in self.ready_inputs.items():
+  #     if _input is UNSET:
+  #       continue
 
-      elif isinstance(_input, PyedNode):
-        self.ready_values[_key] = _input.take()
+  #     elif isinstance(_input, PyedNode):
+  #       self.ready_values[_key] = _input.take()
 
-      else:
-        self.ready_values[_key] = _input
+  #     else:
+  #       self.ready_values[_key] = _input
 
-  def perform(self, scratchpad, result):
-    pass
+  # def perform(self, scratchpad, result):
+  #   pass
 
-  def _peek(self):
-    if self._latest is not UNSET:
-      return self._latest
-    else:
-      return self.take()
+  # def _peek(self):
+  #   if self._latest is not UNSET:
+  #     return self._latest
+  #   else:
+  #     return self.take()
 
-  def peek(self):
-    raise NotImplementedError()
+  # def peek(self):
+  #   raise NotImplementedError()
 
-  def _take(self):
-    _ = self.take()
-    self._latest = _
-    return _
+  # def _take(self):
+  #   _ = self.take()
+  #   self._latest = _
+  #   return _
 
-  def take(self):
-    raise NotImplementedError()
+  # def take(self):
+  #   raise NotImplementedError()
 
   ...
 
@@ -114,11 +116,19 @@ class PyedNode:
 
   def emit(self, field, value):
     """Puts 'value' in the exposed slot for 'field'."""
-    ...
+    self.result[field] = value
+
+  def getval(self, field):
+    """Returns the value in the exposed slot for 'field'; mostly useful for internal node ops."""
+    return self.result[field]
+
+  def take(self, field: str = None):
+    """Like getval, but defaults 'field' to 'value'. This method can also do more complex things if desired."""
+    return self.getval(field or 'value')
 
   def initialize(self):
     """Does anything that is needed once at the start and then never again, or reused throughout."""
-    ...
+    pass
 
   def reset(self):
     """Reverts to a blank slate as if no operations were run."""
@@ -127,13 +137,17 @@ class PyedNode:
   def _base_reset(self):
     self.errors = []
 
-  def prepare(self):
+  def prepare(self, scratchpad):
     """Any setup work needed for an operation."""
-    ...
+    pass
 
-  def perform(self):
+  def perform(self, scratchpad):
     """Does the actual operation(s)."""
-    ...
+    # scratchpad persists across different runs
+
+    # return True if there's new output to be consumed by downstream nodes
+    # return False if e.g. an error (this will probably change in the future)
+    return True
 
   def finish(self):
     """Closes out anything necessary."""

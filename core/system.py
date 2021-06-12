@@ -14,7 +14,7 @@ class PyedSTDIN(PyedNulladic, PyedStream):
     self.given = UNSET
     super().__init__(*args, **kwargs)
 
-  def perform(self, scratchpad, result):
+  def perform(self, scratchpad):
     self.given = input(self.message)
 
   def take(self):
@@ -26,10 +26,16 @@ class PyedSTDOUT(PyedStream):
     _output=lambda _: True,
   )
 
-  def perform(self, scratchpad, result):
+  def perform(self, scratchpad):
+    print('STDOUT')
+    print('STDOUT self.ready_inputs', self.ready_inputs)
     printed = []
-    for _key, _input in self.ready_inputs.items():
+    for _key, _input in self.waiting_inputs.items():
+      print('_input', _input)
       _ = _input.take()
       print(_)
       printed.append(_)
-    result['printed'] = printed
+    self.emit('printed', printed)
+
+  def take(self):
+    return self.getval('printed')

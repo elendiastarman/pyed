@@ -31,7 +31,10 @@ class PyedAddNode(PyedNode):
   )
 
   def perform(self, scratchpad, result):
-    pass
+    # scratchpad persists across different runs
+    # result is new every run
+    
+    return True
 
 
 # # #

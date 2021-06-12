@@ -38,8 +38,19 @@ def __simple_math():
 
   # runner = Runner(root=stdinput, nodes=[stdinput, stdoutput, newline, cut1, pick1, count1])
   director = Director(start_nodes=[stdoutput], all_nodes=[stdoutput, add, a, b])
+  director.initialize()
+  director.step()
+
+
+def __hello_world():
+  hw = PyedConst(hardcoded='Hello world')
+  stdoutput = PyedSTDOUT(inputs=[hw])
+
+  director = Director(start_nodes=[stdoutput], all_nodes=[stdoutput, hw])
+  director.initialize()
+  director.step()
   director.step()
 
 
 if __name__ == '__main__':
-  __simple_math()
+  __hello_world()

@@ -8,16 +8,14 @@ class PyedConst(PyedNulladic, PyedNode):
   """
   Const nodes output their value forever once set.
   """
-  def __init__(self, source: PyedNode, *args, **kwargs):
+  def __init__(self, *args, source: PyedNode = UNSET, hardcoded: object = UNSET, **kwargs):
     self.source = source
+    self.hardcoded = hardcoded
     self.output = UNSET
     super().__init__(*args, **kwargs)
 
-  def prepare(self):
-    self.output = self.source.take()
-
-  def take(self) -> PyedValue:
-    return self.output
+  def initialize(self):
+    self.emit('value', self.hardcoded)
 
 
 class PyedGroupNode(PyedNode):
